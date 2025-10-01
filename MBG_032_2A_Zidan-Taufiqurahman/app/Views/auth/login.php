@@ -41,34 +41,30 @@
             from {opacity: 0; transform: translateY(-20px);}
             to {opacity: 1; transform: translateY(0);}
         }
+        /* Style untuk feedback error custom */
+        .error-feedback {
+            width: 100%;
+            margin-top: 0.25rem;
+            font-size: .875em;
+            color: var(--bs-form-invalid-color); /* Menggunakan variabel warna invalid Bootstrap */
+        }
     </style>
 </head>
 <body>
-    <?php 
-        // Ambil flashdata error dan validasi
-        $error = session()->getFlashdata('error'); 
-        $validation = session()->getFlashdata('errors'); // CodeIgniter 4 menyimpan error validasi di 'errors'
-        $is_error = $error || $validation;
-    ?>
+    <?php $error = session()->getFlashdata('error'); ?>
     <div class="login-card">
         <h2>Login</h2>
         
         <form method="post" action="/auth/doLogin">
             
-            <?php if ($error): // Tampilkan pesan error utama (validasi/autentikasi) ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $error ?>
-                </div>
-            <?php endif; ?>
-
             <div class="mb-3">
                 <label for="nameInput" class="form-label">Username</label>
                 <input type="text" name="name" id="nameInput" 
-                        class="form-control <?= ($is_error || isset($validation['name'])) ? 'is-invalid' : '' ?>" 
-                        value="<?= old('name') ?>" required>
-                <?php if (isset($validation['name'])): // Tampilkan error validasi spesifik nama ?>
+                       class="form-control <?= $error ? 'is-invalid' : '' ?>" 
+                       value="<?= old('name') ?>" required>
+                <?php if ($error): ?>
                     <div class="invalid-feedback">
-                        <?= $validation['name'] ?>
+                        <?= $error ?>
                     </div>
                 <?php endif; ?>
             </div>
@@ -76,11 +72,11 @@
             <div class="mb-3">
                 <label for="passwordInput" class="form-label">Password</label>
                 <input type="password" name="password" id="passwordInput" 
-                        class="form-control <?= ($is_error || isset($validation['password'])) ? 'is-invalid' : '' ?>" 
-                        required>
-                <?php if (isset($validation['password'])): // Tampilkan error validasi spesifik password ?>
+                       class="form-control <?= $error ? 'is-invalid' : '' ?>" 
+                       required>
+                <?php if ($error): ?>
                     <div class="invalid-feedback">
-                        <?= $validation['password'] ?>
+                        Password salah.
                     </div>
                 <?php endif; ?>
             </div>
@@ -88,9 +84,7 @@
             <button type="submit" class="btn btn-primary w-100">Login</button>
         </form>
     </div>
-    
     <script>
-        // Script untuk menghapus kelas is-invalid saat user mulai mengetik
         document.addEventListener('DOMContentLoaded', function() {
             const nameInput = document.getElementById('nameInput');
             const passwordInput = document.getElementById('passwordInput');
@@ -98,23 +92,16 @@
             function handleInput(event) {
                 // Hapus kelas 'is-invalid' saat input diubah
                 event.target.classList.remove('is-invalid');
+                // Hapus feedback error (jika Anda ingin menghapus pesan error)
+                // Jika ingin pesan error tetap ada, hapus baris berikut.
+                // Anda bisa mengimplementasikan logika yang lebih kompleks untuk menyembunyikan div 'invalid-feedback'
             }
 
-            if (nameInput) {
-                nameInput.addEventListener('input', handleInput);
+            if (usernameInput) {
+                usernameInput.addEventListener('input', handleInput);
             }
             if (passwordInput) {
                 passwordInput.addEventListener('input', handleInput);
-            }
-            
-            // Sembunyikan alert error saat user mulai mengetik
-            const alertDiv = document.querySelector('.alert-danger');
-            if (alertDiv) {
-                [nameInput, passwordInput].forEach(input => {
-                    input.addEventListener('input', () => {
-                        alertDiv.style.display = 'none';
-                    });
-                });
             }
         });
     </script>

@@ -33,6 +33,7 @@ class Auth extends BaseController
     public function doLogin()
     {
         $session = session();
+        // Pastikan Anda telah mendefinisikan App\Models\UserModel
         $userModel = new UserModel();
 
         // 1. Definisikan aturan validasi input
@@ -71,7 +72,8 @@ class Auth extends BaseController
                 
                 // 5. Logika pengalihan berdasarkan peran (role)
                 if ($user['role'] === 'gudang') {
-                    return redirect()->to('/gudang/dashboard'); 
+                    // Pengalihan ke Dashboard Gudang
+                    return redirect()->to('/gudang/dashboard')->with('success', 'Login berhasil! Selamat datang di Gudang.'); 
                 } elseif ($user['role'] === 'dapur') {
                     return redirect()->to('/dapur/dashboard');  
                 } else {
@@ -79,7 +81,6 @@ class Auth extends BaseController
                 }
             } else {
                 // Password TIDAK COCOK
-                // Pesan error digabung untuk mencegah serangan enumerasi user
                 return redirect()->back()->withInput()->with('error', 'Nama pengguna atau Password salah.');
             }
         } else {
