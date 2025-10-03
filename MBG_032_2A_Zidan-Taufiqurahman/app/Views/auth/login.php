@@ -46,7 +46,7 @@
             width: 100%;
             margin-top: 0.25rem;
             font-size: .875em;
-            color: var(--bs-form-invalid-color); /* Menggunakan variabel warna invalid Bootstrap */
+            color: var(--bs-form-invalid-color); 
         }
     </style>
 </head>
@@ -56,6 +56,7 @@
         <h2>Login</h2>
         
         <form method="post" action="/auth/doLogin">
+
             
             <div class="mb-3">
                 <label for="nameInput" class="form-label">Username</label>
@@ -90,12 +91,7 @@
             const passwordInput = document.getElementById('passwordInput');
 
             function handleInput(event) {
-                // Hapus kelas 'is-invalid' saat input diubah
-                event.target.classList.remove('is-invalid');
-                // Hapus feedback error (jika Anda ingin menghapus pesan error)
-                // Jika ingin pesan error tetap ada, hapus baris berikut.
-                // Anda bisa mengimplementasikan logika yang lebih kompleks untuk menyembunyikan div 'invalid-feedback'
-            }
+                event.target.classList.remove('is-invalid'); }
 
             if (usernameInput) {
                 usernameInput.addEventListener('input', handleInput);
