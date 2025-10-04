@@ -37,7 +37,6 @@ class StokController extends Controller
             $this->bahanBakuModel->update($item['id'], ['status' => $item['status']]);
         }
 
-        // ✅ Tambahkan session ke data yang dikirim ke view
         $data = [
             'bahan_baku' => $bahan_baku,
             'session' => $session

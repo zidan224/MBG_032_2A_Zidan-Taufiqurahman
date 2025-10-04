@@ -14,18 +14,17 @@ class UserModel extends Model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
     
-    // Callbacks untuk hashing password sebelum insert dan update
     // Menggunakan 'hashPassword'
     protected $beforeInsert = ['hashPassword'];
     protected $beforeUpdate = ['hashPassword'];
 
     /**
-     * Fungsi untuk hashing password menggunakan password_hash() yang aman.
+     * Fungsi untuk hashing password 
      */
     protected function hashPassword(array $data)
     {
         if (isset($data['data']['password'])) {
-            // Menggunakan PASSWORD_DEFAULT (saat ini bcrypt) untuk hashing yang aman.
+            // Menggunakan PASSWORD_DEFAULT (saat ini bcrypt) untuk hashing 
             $data['data']['password'] = password_hash($data['data']['password'], PASSWORD_DEFAULT);
         }
 

@@ -15,8 +15,6 @@ class GudangController extends BaseController
     public function dashboard()
     {
         $session = session();
-        
-        // --- PEMERIKSAAN SESI MANUAL ---
         // Jika user belum login atau role-nya bukan 'gudang', kembalikan ke login
         if (!$session->get('logged_in') || $session->get('role') !== 'gudang') {
             // Arahkan ke login dan berikan pesan error

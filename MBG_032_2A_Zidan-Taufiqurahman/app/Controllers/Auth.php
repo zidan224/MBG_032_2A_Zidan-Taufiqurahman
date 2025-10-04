@@ -57,12 +57,9 @@ class Auth extends BaseController
 
         if ($user) {
             
-            // --- VERIFIKASI PASSWORD MENGGUNAKAN password_verify() (AMAN) ---
+            // VERIFIKASI PASSWORD 
             if (password_verify($password, $user['password'])) {
             
-                // --- Otentikasi Berhasil ---
-                
-                // 4. Set Session
                 $session->set([
                     'user_id'   => $user['id'],
                     'username'  => $user['name'],
@@ -70,7 +67,7 @@ class Auth extends BaseController
                     'logged_in' => true
                 ]);
                 
-                // 5. Logika pengalihan berdasarkan peran (role)
+                // berdasarkan peran (role)
                 if ($user['role'] === 'gudang') {
                     // Pengalihan ke Dashboard Gudang
                     return redirect()->to('/gudang/dashboard')->with('success', 'Login berhasil! Selamat datang di Gudang.'); 
