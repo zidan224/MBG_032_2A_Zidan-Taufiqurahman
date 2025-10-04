@@ -13,15 +13,12 @@ class StokController extends Controller
         $this->bahanBakuModel = new BahanBakuModel();
     }
 
-    // LIST SEMUA DATA
+    // 📦 Daftar bahan baku
     public function index()
     {
-        $session = session(); // ✅ Tambahkan ini
-
         $bahan_baku = $this->bahanBakuModel->findAll();
-
-        // Hitung status otomatis
         $today = date('Y-m-d');
+
         foreach ($bahan_baku as &$item) {
             if ($item['jumlah'] == 0) {
                 $item['status'] = 'Habis';
@@ -33,26 +30,23 @@ class StokController extends Controller
                 $item['status'] = 'Tersedia';
             }
 
-            // update status ke DB
             $this->bahanBakuModel->update($item['id'], ['status' => $item['status']]);
         }
 
         $data = [
-            'bahan_baku' => $bahan_baku,
-            'session' => $session
+            'bahan_baku' => $bahan_baku
         ];
 
         return view('stok/index', $data);
     }
 
-    // FORM TAMBAH
+    // ➕ Form tambah
     public function create()
     {
-        $session = session(); // kalau view-nya juga pakai session, tambahkan ini
-        return view('stok/create', ['session' => $session]);
+        return view('stok/create');
     }
 
-    // SIMPAN TAMBAHAN
+    // 💾 Simpan data baru
     public function store()
     {
         $jumlah = $this->request->getPost('jumlah');
@@ -73,7 +67,24 @@ class StokController extends Controller
         return redirect()->to('/gudang/stok')->with('success', 'Bahan baku berhasil ditambahkan');
     }
 
-    // UPDATE JUMLAH
+    // ✏️ Form edit
+    public function edit($id)
+    {
+        $item = $this->bahanBakuModel->find($id);
+
+        if (!$item) {
+            return redirect()->to('/gudang/stok')->with('error', 'Data tidak ditemukan');
+        }
+
+        $data = [
+            'title' => 'Edit Bahan Baku',
+            'item'  => $item
+        ];
+
+        return view('stok/edit', $data);
+    }
+
+    // 🔁 Update stok
     public function update($id)
     {
         $jumlah = $this->request->getPost('jumlah');
@@ -85,16 +96,17 @@ class StokController extends Controller
         return redirect()->to('/gudang/stok')->with('success', 'Stok berhasil diperbarui');
     }
 
-    // HAPUS
+    // 🗑️ Hapus bahan baku
     public function delete($id)
-    {
-        $item = $this->bahanBakuModel->find($id);
+{
+    $item = $this->bahanBakuModel->find($id);
 
-        if ($item['status'] !== 'Kadaluarsa') {
-            return redirect()->back()->with('error', 'Hanya bahan baku kadaluarsa yang bisa dihapus!');
-        }
-
-        $this->bahanBakuModel->delete($id);
-        return redirect()->to('/gudang/stok')->with('success', 'Data berhasil dihapus');
+    if (!$item) {
+        return redirect()->to('/gudang/stok')->with('error', 'Data tidak ditemukan!');
     }
+
+    $this->bahanBakuModel->delete($id);
+
+    return redirect()->to('/gudang/stok')->with('success', 'Data berhasil dihapus!');
+}
 }

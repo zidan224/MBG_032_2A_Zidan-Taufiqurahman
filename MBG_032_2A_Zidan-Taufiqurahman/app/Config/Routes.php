@@ -23,7 +23,13 @@ $routes->get('dapur/dashboard', 'DapurController::dashboard');
 $routes->group('gudang', function($routes) {
     $routes->get('stok', 'StokController::index');
     $routes->get('stok/tambah', 'StokController::create');
-    $routes->post('stok/store', 'StokController::store');  
-    $routes->post('stok/update/(:num)', 'StokController::update/$1'); 
-    $routes->get('stok/hapus/(:num)', 'StokController::delete/$1'); 
+    $routes->post('stok/store', 'StokController::store');
+    $routes->get('stok/edit/(:num)', 'StokController::edit/$1');
+    $routes->post('stok/update/(:num)', 'StokController::update/$1');
+    $routes->get('stok/hapus/(:num)', 'StokController::delete/$1');
 });
+
+
+
+
+
