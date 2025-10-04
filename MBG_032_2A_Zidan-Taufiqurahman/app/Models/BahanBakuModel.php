@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 
 class BahanBakuModel extends Model
 {
-    protected $table = 'bahan_baku'; // nama tabel di DB
+    protected $table = 'bahan_baku'; 
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'nama',
@@ -17,7 +17,7 @@ class BahanBakuModel extends Model
         'status'
     ];
 
-    // Hitung status berdasarkan stok dan tanggal
+
     public function hitungStatus($tanggal_kadaluarsa, $jumlah_stok)
     {
         $hari_ini = strtotime(date('Y-m-d'));
