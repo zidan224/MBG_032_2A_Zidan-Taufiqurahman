@@ -33,3 +33,5 @@ $routes->group('gudang', function($routes) {
 
 
 
+
+

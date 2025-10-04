@@ -13,7 +13,7 @@ class StokController extends Controller
         $this->bahanBakuModel = new BahanBakuModel();
     }
 
-    // 📦 Daftar bahan baku
+    // Daftar bahan baku
     public function index()
     {
         $bahan_baku = $this->bahanBakuModel->findAll();
@@ -34,19 +34,20 @@ class StokController extends Controller
         }
 
         $data = [
-            'bahan_baku' => $bahan_baku
+            'bahan_baku' => $bahan_baku,
+            'session'    => session()   
         ];
 
         return view('stok/index', $data);
     }
 
-    // ➕ Form tambah
+    //  Form tambah
     public function create()
     {
         return view('stok/create');
     }
 
-    // 💾 Simpan data baru
+    //  Simpan data baru
     public function store()
     {
         $jumlah = $this->request->getPost('jumlah');
@@ -67,7 +68,7 @@ class StokController extends Controller
         return redirect()->to('/gudang/stok')->with('success', 'Bahan baku berhasil ditambahkan');
     }
 
-    // ✏️ Form edit
+    //  Form edit
     public function edit($id)
     {
         $item = $this->bahanBakuModel->find($id);
@@ -84,7 +85,7 @@ class StokController extends Controller
         return view('stok/edit', $data);
     }
 
-    // 🔁 Update stok
+    // Update stok
     public function update($id)
     {
         $jumlah = $this->request->getPost('jumlah');
@@ -96,17 +97,55 @@ class StokController extends Controller
         return redirect()->to('/gudang/stok')->with('success', 'Stok berhasil diperbarui');
     }
 
-    // 🗑️ Hapus bahan baku
+        public function confirmDelete($id)
+    {
+        $session = session();
+        $item = $this->bahanBakuModel->find($id);
+
+        if (!$item) {
+            return redirect()->to('/gudang/stok')->with('error', 'Data tidak ditemukan.');
+        }
+
+        $data = [
+            'title'   => 'Konfirmasi Hapus Bahan Baku',
+            'item'    => $item,
+            'session' => $session
+        ];
+
+        return view('stok/confirm_delete', $data);
+    }
+
     public function delete($id)
 {
     $item = $this->bahanBakuModel->find($id);
 
     if (!$item) {
-        return redirect()->to('/gudang/stok')->with('error', 'Data tidak ditemukan!');
+        return redirect()->to('/gudang/stok')->with('error', 'Data bahan baku tidak ditemukan!');
     }
 
-    $this->bahanBakuModel->delete($id);
+    // Hitung status terbaru
+    $today = date('Y-m-d');
+    if ($item['jumlah'] == 0) {
+        $item['status'] = 'Habis';
+    } elseif ($today >= $item['tanggal_kadaluarsa']) {
+        $item['status'] = 'Kadaluarsa';
+    } elseif ((strtotime($item['tanggal_kadaluarsa']) - strtotime($today)) / 86400 <= 3) {
+        $item['status'] = 'Segera Kadaluarsa';
+    } else {
+        $item['status'] = 'Tersedia';
+    }
 
-    return redirect()->to('/gudang/stok')->with('success', 'Data berhasil dihapus!');
+    // Update status terbaru ke database
+    $this->bahanBakuModel->update($id, ['status' => $item['status']]);
+
+    // Hanya izinkan hapus jika status KADALUARSA
+    if (strtolower($item['status']) === 'kadaluarsa') {
+        $this->bahanBakuModel->delete($id);
+        return redirect()->to('/gudang/stok')->with('success', 'Bahan baku kadaluarsa berhasil dihapus.');
+    }
+
+    // ❌ Jika bukan kadaluarsa → tampilkan pesan bahwa tidak bisa dihapus
+    return redirect()->to('/gudang/stok')->with('error', 'Bahan baku ini tidak dapat dihapus karena statusnya bukan kadaluarsa.');
 }
+
 }

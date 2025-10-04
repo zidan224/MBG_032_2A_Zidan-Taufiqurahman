@@ -17,9 +17,13 @@
                     <a href="<?= base_url('gudang/stok') ?>" class="bg-blue-800 px-3 py-2 rounded-lg">Daftar Stok</a>
                 </div>
             </div>
-            <div>
-                <span>Halo, <?= esc(session()->get('username') ?? 'Petugas') ?></span>
-            </div>
+            <div class="flex items-center space-x-4">
+            <span class="font-medium">Halo, <?= esc($session->get('username')) ?></span>
+            <a href="<?= base_url('logout') ?>" 
+               class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition duration-300">
+               Logout
+            </a>
+        </div>
         </div>
     </nav>
 
@@ -69,11 +73,11 @@
                     <td class="border p-3 flex space-x-2 justify-center">
                         <a href="<?= base_url('gudang/stok/edit/'.$item['id']) ?>" 
                             class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded"> Edit </a>
-                            <a href="<?= base_url('gudang/stok/hapus/'.$item['id']) ?>" 
-                            onclick="return confirm('Yakin ingin menghapus <?= esc($item['nama']) ?>?')"
-                            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
-                            Delete
-                            </a>
+                        <a href="<?= base_url('gudang/stok/hapus/'.$item['id']) ?>"
+                            onclick="return confirm('Yakin ingin menghapus bahan baku <?= esc($item['nama']) ?>?')"
+                            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition duration-300">
+                            Hapus
+                        </a>
 
                     </td>
                 </tr>

@@ -11,6 +11,8 @@ class BahanBakuModel extends Model
         'nama',
         'kategori',
         'jumlah',
+        'satuan',
+        'tanggal_masuk',
         'tanggal_kadaluarsa',
         'status'
     ];
