@@ -12,7 +12,7 @@ $routes->get('/', 'Home::index');
 $routes->get('auth/login', 'Auth::login');
 $routes->post('auth/doLogin', 'Auth::doLogin');
 $routes->get('auth/logout', 'Auth::logout');
-
+$routes->get('logout', 'Auth::logout');
 // Rute untuk Dashboard Gudang (Tanpa Filter, keamanan ada di GudangController)
 $routes->get('gudang/dashboard', 'GudangController::dashboard');
 $routes->get('gudang/setujui/(:num)', 'GudangController::setujui/$1');
@@ -28,7 +28,6 @@ $routes->group('dapur', function($routes) {
     $routes->get('permintaan/tambah', 'DapurController::createPermintaan');
     // Simpan permintaan bahan
     $routes->post('storePermintaan', 'DapurController::storePermintaan');
-
 });
 
 // stok pada dashboard admin (gudang)

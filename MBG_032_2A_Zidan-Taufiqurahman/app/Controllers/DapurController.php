@@ -98,6 +98,11 @@ class DapurController extends BaseController
 
     return redirect()->to(base_url('dapur/dashboard'))->with('success', 'Permintaan berhasil dikirim!');
 }
+    public function logout()
+    {
+        session()->destroy();
+        return redirect()->to(base_url('auth/login'));
+    }
 
     }
 

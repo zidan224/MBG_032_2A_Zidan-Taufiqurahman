@@ -59,4 +59,9 @@ class GudangController extends BaseController
             'bahan_baku' => $bahan_baku // Daftar semua bahan baku dan stoknya
         ]);
     }
+    public function logout()
+    {
+        session()->destroy();
+        return redirect()->to(base_url('auth/login'));
+    }
 }
